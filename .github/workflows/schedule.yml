@@ -2,12 +2,18 @@ name: Scheduled News Update
 
 on:
   schedule:
-    - cron: '0 17 * * *'  # 毎日午前0時に実行
+    - cron: "0 17 * * *" # 毎日午前2時に実行
   workflow_dispatch:
 
 jobs:
   update-news:
     runs-on: ubuntu-latest
     steps:
-    - name: Call Vercel API Endpoint
-      run: curl -X POST "https://news-provider-api.vercel.app/update"
+      - name: Call Vercel API Endpoint
+        run: |
+          response=$(curl -X POST "https://news-provider-api.vercel.app/update")
+          if [ $? -ne 0 ]; then
+            echo "APIの呼び出しに失敗しました"
+            exit 1
+          fi
+          echo "レスポンス: $response"

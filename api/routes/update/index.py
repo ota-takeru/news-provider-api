@@ -1,6 +1,7 @@
 import datetime
 from http.server import BaseHTTPRequestHandler
 import json
+import os
 from api.services.get_news_bing import GetNewsBing
 from api.models.postgres_database import PostgresDatabase
 from api.services.scraping_news import ScrapingNews
@@ -9,10 +10,15 @@ class handler(BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         self.getNewsBing = GetNewsBing()
         self.scraping_news = ScrapingNews()
-        self.database = PostgresDatabase()
+        database_url = os.environ.get('DATABASE_URL')
+        self.database = PostgresDatabase(database_url)
         self.database.connect()
         self.database.create_table("news", "id SERIAL PRIMARY KEY, title VARCHAR(255),url, VARCHAR(255)")
         super().__init__(*args, **kwargs)
+
+    def __del__(self):
+        if hasattr(self, 'database'):
+            self.database.close()
 
     def do_POST(self):
         news_api = self.getNewsBing.get_customized_top_news(count=5)
@@ -25,7 +31,7 @@ class handler(BaseHTTPRequestHandler):
         news_data = self.database.get_dairy_news("news", time_22_hours_ago)
         
         print(news_data)
-        
+
         # news_contents = [self.scraping_news.fetch_article_content(news["url"]) for news in news_data]
 
         # print(news_contents)        
