@@ -31,7 +31,7 @@ class PostgresDatabase:
         """
         テーブルを作成
         :param table_name: テーブル名
-        :param columns: カラム定義（例: "id SERIAL PRIMARY KEY, title VARCHAR(255), content TEXT "）
+        :param columns: カラム定義（例: "id SERIAL PRIMARY KEY, title VARCHAR(255), content TEXT "
         """
         columns += ", created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
         try:

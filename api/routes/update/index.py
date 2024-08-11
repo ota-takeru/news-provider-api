@@ -13,7 +13,7 @@ class handler(BaseHTTPRequestHandler):
         database_url = os.environ.get('POSTGRES_URL')
         self.database = PostgresDatabase(database_url)
         self.database.connect()
-        self.database.create_table("news", "id SERIAL PRIMARY KEY, title VARCHAR(255), url VARCHAR(255)")
+        self.database.create_table("news", "id SERIAL PRIMARY KEY, title Text, url Text")
         super().__init__(*args, **kwargs)
 
     def __del__(self):
