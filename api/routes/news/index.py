@@ -19,10 +19,12 @@ class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         time_22_hours_ago = datetime.now() - timedelta(hours=22)
         try:
-            news_data = self.database.get_dairy_news("news", time_22_hours_ago)
+            news_data = self.database.get_daily_news("news", time_22_hours_ago)
             if not news_data:
                 news_data = []
                 print("ニュースデータが見つかりませんでした。")
+            all_data = self.database.get_all_data("news")
+            print("all_data", all_data)
         except Exception as e:
             news_data = []
             print(f"ニュースデータの取得中にエラーが発生しました: {e}")

@@ -70,7 +70,7 @@ class PostgresDatabase:
             self.conn.rollback()
             raise
 
-    def get_dairy_news(self, table_name: str, last_check_time: datetime):
+    def get_daily_news(self, table_name: str, last_check_time: datetime):
         """
         新しく挿入されたレコードを取得
         :param table_name: テーブル名
