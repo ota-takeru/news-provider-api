@@ -33,11 +33,15 @@ class handler(BaseHTTPRequestHandler):
          # datetimeオブジェクトを文字列に変換
         serializable_news_data = []
         for item in news_data:
-            serializable_item = list(item)
-            serializable_item[3] = serializable_item[3].isoformat()
-            serializable_news_data.append(tuple(serializable_item))
+            serializable_item = {
+                "id": item[0],
+                "title": item[1],
+                "content": item[2],
+                # "published_date": item[3].isoformat(),
+                # 他のフィールドがある場合は追加
+            }
+            serializable_news_data.append(serializable_item)
 
-        # JSON形式に変換
         response = json.dumps(serializable_news_data, ensure_ascii=False)
 
         # ヘッダーの設定
