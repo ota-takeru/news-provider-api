@@ -5,6 +5,8 @@ import os
 from api.services.get_news_bing import GetNewsBing
 from api.models.postgres_database import PostgresDatabase
 from api.services.scraping_news import ScrapingNews
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 class handler(BaseHTTPRequestHandler):  
     def __init__(self, *args, **kwargs):
@@ -20,21 +22,33 @@ class handler(BaseHTTPRequestHandler):
         if hasattr(self, 'database'):
             self.database.close()
 
-    def do_POST(self):
-        news_api = self.getNewsBing.get_customized_top_news(count=5)
-        for news in news_api:
-            title = news["name"]
-            url = news["url"]
-            self.database.insert_data("news", {"title": title, "url": url})
-            
+    async def update_news(self):
         time_22_hours_ago = datetime.now() - timedelta(hours=22)
-        news_data = self.database.get_dairy_news("news", time_22_hours_ago)
+        news_data = self.database.get_daily_news("news", time_22_hours_ago)
         
+        urls = [news["url"] for news in news_data]
         
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            loop = asyncio.get_event_loop()
+            contents = await loop.run_in_executor(
+                executor, 
+                self.scraping_news.scrape_with_rate_limit, 
+                urls
+            )
+        
+        for news, content in zip(news_data, contents):
+            self.database.update_news_content(news["id"], content)
 
-        news_contents = [self.scraping_news.fetch_article_content(news["url"]) for news in news_data]
+        print(f"{len(contents)}件のニュース記事が更新されました。")
 
-        print(news_contents)        
+    def do_POST(self):
+        # news_api = self.getNewsBing.get_customized_top_news(count=5)
+        # for news in news_api:
+        #     title = news["name"]
+        #     url = news["url"]
+        #     self.database.insert_data("news", {"title": title, "url": url})
+            
+        asyncio.run(self.update_news())     
 
         response = {"message": "News data saved successfully."}
         response_json = json.dumps(response)
@@ -46,4 +60,3 @@ class handler(BaseHTTPRequestHandler):
 
         # レスポンスの送信
         self.wfile.write(response_json.encode('utf-8'))
-        return

@@ -117,6 +117,23 @@ class PostgresDatabase:
             print(f"Failed to fetch data: {e}")
             raise
 
+    def update_news_content(self, news_id: int, content: str):
+        """
+        ニュース記事のコンテンツを更新
+        :param news_id: ニュース記事のID
+        :param content: 更新するコンテンツ
+        """
+        try:
+            update_query = sql.SQL("UPDATE {table} SET content = %s WHERE id = %s").format(
+                table=sql.Identifier("news")
+            )
+            self.cursor.execute(update_query, (content, news_id))
+            self.conn.commit()
+            print(f"ニュース記事 (ID: {news_id}) のコンテンツが更新されました。")
+        except Exception as e:
+            print(f"ニュース記事の更新に失敗しました: {e}")
+            self.conn.rollback()
+            raise
 
 # if __name__ == "__main__":
 #     # 環境変数からデータベースURLを取得
