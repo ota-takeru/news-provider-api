@@ -10,4 +10,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Call Vercel API Endpoint
-      run: curl -X POST "https://your-vercel-app.vercel.app/api/save-news"
+      run: curl -X POST "https://news-provider-api.vercel.app/update"
