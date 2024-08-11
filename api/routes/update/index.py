@@ -25,6 +25,8 @@ class handler(BaseHTTPRequestHandler):
     async def update_news(self):
         time_22_hours_ago = datetime.now() - timedelta(hours=22)
         news_data = self.database.get_daily_news("news", time_22_hours_ago)
+
+        print("データを取得しました")
         
         urls = [news["url"] for news in news_data]
         

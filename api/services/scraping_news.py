@@ -16,6 +16,7 @@ class ScrapingNews:
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
+            print("スクレイピングを始めます")
             
             # メインコンテンツの抽出（この部分はウェブサイトの構造に応じて調整が必要）
             main_content = soup.find('main') or soup.find('article') or soup.find('div', class_='content')
