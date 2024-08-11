@@ -6,7 +6,7 @@ from api.models.postgres_database import PostgresDatabase
 
 class handler(BaseHTTPRequestHandler):  
     def __init__(self, *args, **kwargs):
-        database_url = os.environ.get('DATABASE_URL')
+        database_url = os.environ.get('POSTGRES_URL')
 
         self.database = PostgresDatabase(database_url)
         self.database.connect() 
