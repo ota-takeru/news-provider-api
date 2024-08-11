@@ -46,7 +46,7 @@ class handler(BaseHTTPRequestHandler):
 
         # ヘッダーの設定
         self.send_response(200)
-        self.send_header("Content-type", "application/json")
+        self.send_header("Content-type", "application/json; charset=utf-8")
         self.end_headers()
 
         # レスポンスの送信
