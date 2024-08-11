@@ -30,8 +30,15 @@ class handler(BaseHTTPRequestHandler):
             news_data = []
             print(f"ニュースデータの取得中にエラーが発生しました: {e}")
 
+         # datetimeオブジェクトを文字列に変換
+        serializable_news_data = []
+        for item in news_data:
+            serializable_item = list(item)
+            serializable_item[3] = serializable_item[3].isoformat()
+            serializable_news_data.append(tuple(serializable_item))
+
         # JSON形式に変換
-        response = json.dumps(news_data, ensure_ascii=False)
+        response = json.dumps(serializable_news_data, ensure_ascii=False)
 
         # ヘッダーの設定
         self.send_response(200)
