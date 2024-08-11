@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler
 import json
 import os
@@ -27,7 +27,7 @@ class handler(BaseHTTPRequestHandler):
             url = news["url"]
             self.database.insert_data("news", {"title": title, "url": url})
             
-        time_22_hours_ago = datetime.now() - datetime.timedelta(hours=22)
+        time_22_hours_ago = datetime.now() - timedelta(hours=22)
         news_data = self.database.get_dairy_news("news", time_22_hours_ago)
         
         
