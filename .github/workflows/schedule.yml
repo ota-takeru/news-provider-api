@@ -3,6 +3,7 @@ name: Scheduled News Update
 on:
   schedule:
     - cron: '0 17 * * *'  # 毎日午前0時に実行
+  workflow_dispatch:
 
 jobs:
   update-news:
