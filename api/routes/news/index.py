@@ -18,8 +18,14 @@ class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         time_22_hours_ago = datetime.now() - timedelta(hours=22)
-        news_data = self.database.get_dairy_news("news", time_22_hours_ago)
-
+        try:
+            news_data = self.database.get_dairy_news("news", time_22_hours_ago)
+            if not news_data:
+                news_data = []
+                print("ニュースデータが見つかりませんでした。")
+        except Exception as e:
+            news_data = []
+            print(f"ニュースデータの取得中にエラーが発生しました: {e}")
 
         # JSON形式に変換
         response = json.dumps(news_data, ensure_ascii=False)
