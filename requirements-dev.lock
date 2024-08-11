@@ -60,6 +60,7 @@ regex==2024.7.24
     # via nltk
 requests==2.32.3
     # via feedfinder2
+    # via news-provider-api
     # via newspaper3k
     # via requests-file
     # via tldextract
