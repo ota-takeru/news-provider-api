@@ -93,7 +93,8 @@ class PostgresDatabase:
                 last_check_time=sql.Literal(last_check_time)
             )
             self.cursor.execute(query)
-            new_records = self.cursor.fetchall()
+            column_names = [desc[0] for desc in self.cursor.description]
+            new_records = [dict(zip(column_names, row)) for row in self.cursor.fetchall()]
             return new_records
         except Exception as e:
             print(f"Failed to retrieve new records: {e}")
