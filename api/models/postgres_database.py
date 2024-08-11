@@ -35,15 +35,25 @@ class PostgresDatabase:
         """
         columns += ", created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
         try:
-            create_table_query = sql.SQL("CREATE TABLE IF NOT EXISTS {table} ({columns})").format(
-                table=sql.Identifier(table_name),
-                columns=sql.SQL(columns)
+            # テーブルが存在するかチェック
+            check_table_query = sql.SQL("SELECT to_regclass({table})").format(
+                table=sql.Literal(table_name)
             )
-            self.cursor.execute(create_table_query)
-            self.conn.commit()
-            print(f"Table '{table_name}' created successfully.")
+            self.cursor.execute(check_table_query)
+            table_exists = self.cursor.fetchone()[0]
+
+            if table_exists:
+                print(f"テーブル '{table_name}' はすでに存在します。")
+            else:
+                create_table_query = sql.SQL("CREATE TABLE IF NOT EXISTS {table} ({columns})").format(
+                    table=sql.Identifier(table_name),
+                    columns=sql.SQL(columns)
+                )
+                self.cursor.execute(create_table_query)
+                self.conn.commit()
+                print(f"テーブル '{table_name}' が正常に作成されました。")
         except Exception as e:
-            print(f"Failed to create table: {e}")
+            print(f"テーブルの作成に失敗しました: {e}")
             self.conn.rollback()
             raise
 
