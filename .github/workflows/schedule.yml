@@ -1,0 +1,13 @@
+name: Scheduled News Update
+
+on:
+  schedule:
+    - cron: '0 17 * * *'  # 毎日午前0時に実行
+  workflow_dispatch:
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Call Vercel API Endpoint
+      run: curl -X POST "https://news-provider-api.vercel.app/update"
