@@ -14,13 +14,17 @@ beautifulsoup4==4.12.3
     # via feedfinder2
     # via news-provider-api
     # via newspaper3k
+build==1.2.1
+    # via pip-tools
 certifi==2024.7.4
     # via requests
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via nltk
+    # via pip-tools
 colorama==0.4.6
+    # via build
     # via click
     # via tqdm
 cssselect==1.2.0
@@ -48,10 +52,19 @@ newspaper3k==0.2.8
     # via news-provider-api
 nltk==3.8.2
     # via newspaper3k
+packaging==24.1
+    # via build
 pillow==10.4.0
     # via newspaper3k
+pip==24.2
+    # via pip-tools
+pip-tools==7.4.1
+    # via news-provider-api
 psycopg2-binary==2.9.9
     # via news-provider-api
+pyproject-hooks==1.1.0
+    # via build
+    # via pip-tools
 python-dateutil==2.9.0.post0
     # via newspaper3k
 pyyaml==6.0.2
@@ -66,6 +79,8 @@ requests==2.32.3
     # via tldextract
 requests-file==2.1.0
     # via tldextract
+setuptools==72.1.0
+    # via pip-tools
 sgmllib3k==1.0.0
     # via feedparser
 six==1.16.0
@@ -81,3 +96,5 @@ tqdm==4.66.5
     # via nltk
 urllib3==2.2.2
     # via requests
+wheel==0.44.0
+    # via pip-tools
