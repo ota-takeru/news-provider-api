@@ -1,7 +1,7 @@
 import requests
 
 class GetNewsBing:
-    def __init__(self, subscription_key, market="ja-JP"):
+    def __init__(self, market="ja-JP"):
         """
         コンストラクタ: NewsFetcher クラスのインスタンスを初期化
         :param subscription_key: Bing News Search APIのサブスクリプションキー
