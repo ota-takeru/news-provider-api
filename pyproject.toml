@@ -12,6 +12,7 @@ dependencies = [
     "psycopg2-binary>=2.9.9",
     "requests>=2.32.3",
     "pip-tools>=7.4.1",
+    "aiohttp>=3.10.3",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
