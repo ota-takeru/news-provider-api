@@ -6,7 +6,8 @@
   },
   "rewrites": [
     { "source": "/", "destination": "/api" },
-    { "source": "/news", "destination": "/api/routes/news" }
+    { "source": "/news", "destination": "/api/routes/news" },
+    { "source": "/update", "destination": "/api/routes/update" }
   ],
   "headers": [
     {
