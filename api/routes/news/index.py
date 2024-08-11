@@ -4,16 +4,17 @@ import json
 from datetime import datetime, timedelta
 from api.models.postgres_database import PostgresDatabase
 
-class handler(BaseHTTPRequestHandler):  
+
+class handler(BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        database_url = os.environ.get('POSTGRES_URL')
+        database_url = os.environ.get("POSTGRES_URL")
 
         self.database = PostgresDatabase(database_url)
-        self.database.connect() 
+        self.database.connect()
         super().__init__(*args, **kwargs)
 
     def __del__(self):
-        if hasattr(self, 'database'):
+        if hasattr(self, "database"):
             self.database.close()
 
     def do_GET(self):
@@ -23,7 +24,7 @@ class handler(BaseHTTPRequestHandler):
             if not news_data:
                 news_data = []
                 print("ニュースデータが見つかりませんでした。")
-            all_data = self.database.get_all_data("news")
+            all_data = self.database.fetch_all("news")
             print("all_data", all_data)
         except Exception as e:
             news_data = []
@@ -34,9 +35,9 @@ class handler(BaseHTTPRequestHandler):
 
         # ヘッダーの設定
         self.send_response(200)
-        self.send_header('Content-type','application/json')
+        self.send_header("Content-type", "application/json")
         self.end_headers()
 
         # レスポンスの送信
-        self.wfile.write(response.encode('utf-8'))
+        self.wfile.write(response.encode("utf-8"))
         return
