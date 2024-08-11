@@ -30,11 +30,11 @@ class handler(BaseHTTPRequestHandler):
         time_22_hours_ago = datetime.now() - datetime.timedelta(hours=22)
         news_data = self.database.get_dairy_news("news", time_22_hours_ago)
         
-        print(news_data)
+        
 
-        # news_contents = [self.scraping_news.fetch_article_content(news["url"]) for news in news_data]
+        news_contents = [self.scraping_news.fetch_article_content(news["url"]) for news in news_data]
 
-        # print(news_contents)        
+        print(news_contents)        
 
         response = {"message": "News data saved successfully."}
         response_json = json.dumps(response)
