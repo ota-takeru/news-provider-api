@@ -4,6 +4,14 @@
 #
 #    pip-compile --output-file=requirements.txt pyproject.toml
 #
+aiohappyeyeballs==2.3.5
+    # via aiohttp
+aiohttp==3.10.3
+    # via news-provider-api (pyproject.toml)
+aiosignal==1.3.1
+    # via aiohttp
+attrs==24.2.0
+    # via aiohttp
 beautifulsoup4==4.12.3
     # via
     #   feedfinder2
@@ -32,10 +40,15 @@ feedparser==6.0.11
     # via newspaper3k
 filelock==3.15.4
     # via tldextract
+frozenlist==1.4.1
+    # via
+    #   aiohttp
+    #   aiosignal
 idna==3.7
     # via
     #   requests
     #   tldextract
+    #   yarl
 jieba3k==0.35.1
     # via newspaper3k
 joblib==1.4.2
@@ -47,6 +60,10 @@ lxml[html-clean]==5.3.0
     #   newspaper3k
 lxml-html-clean==0.2.0
     # via lxml
+multidict==6.0.5
+    # via
+    #   aiohttp
+    #   yarl
 newspaper3k==0.2.8
     # via news-provider-api (pyproject.toml)
 nltk==3.8.2
@@ -96,6 +113,8 @@ urllib3==2.2.2
     # via requests
 wheel==0.44.0
     # via pip-tools
+yarl==1.9.4
+    # via aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
