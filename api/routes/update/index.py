@@ -30,14 +30,8 @@ class handler(BaseHTTPRequestHandler):
         
         urls = [news["url"] for news in news_data]
         
-        with ThreadPoolExecutor(max_workers=5) as executor:
-            loop = asyncio.get_event_loop()
-            contents = await loop.run_in_executor(
-                executor, 
-                self.scraping_news.scrape_with_rate_limit, 
-                urls
-            )
-        
+        contents = await self.scraping_news.scrape_with_rate_limit(urls)
+    
         for news, content in zip(news_data, contents):
             self.database.update_news_content(news["id"], content)
 
@@ -50,7 +44,12 @@ class handler(BaseHTTPRequestHandler):
         #     url = news["url"]
         #     self.database.insert_data("news", {"title": title, "url": url})
             
-        asyncio.run(self.update_news())     
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(self.update_news())
+        finally:
+            loop.close()  
 
         response = {"message": "News data saved successfully."}
         response_json = json.dumps(response)
