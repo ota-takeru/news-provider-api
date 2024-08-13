@@ -57,7 +57,7 @@ class ScrapingNews:
             print(" urlを取得してスクレイピングを開始します")
             tasks = []
             for url in urls:
-                task = self.fetch_with_retry(session, url, max_retries)
+                task = asyncio.create_task(self.fetch_with_retry(session, url, max_retries))
                 tasks.append(task)
                 await asyncio.sleep(
                     delay + random.uniform(0, 3)
