@@ -13,7 +13,7 @@ class ScrapingNews:
     async def fetch_article_content(self, session, url):
         print("スクレイピングを試みます。")
         try:
-            async with session.get(url, headers=self.headers, timeout=30) as response:
+            async with session.get(url, headers=self.headers, timeout=60) as response:
                 html = await response.text()
                 soup = BeautifulSoup(html, "html.parser")
                 print(f"{url}のスクレイピングを始めます")
@@ -52,7 +52,7 @@ class ScrapingNews:
             )
             return f"予期せぬエラー: コンテンツの取得に失敗しました - {str(e)}"
 
-    async def scrape_with_rate_limit(self, urls, delay=1, max_retries=3):
+    async def scrape_with_rate_limit(self, urls, delay=3, max_retries=3, timeout=500):
         async with aiohttp.ClientSession() as session:
             print(" urlを取得してスクレイピングを開始します")
             tasks = []
@@ -60,14 +60,18 @@ class ScrapingNews:
                 task = asyncio.create_task(self.fetch_with_retry(session, url, max_retries))
                 tasks.append(task)
                 await asyncio.sleep(
-                    delay + random.uniform(0, 3)
-                )  # ランダムな遅延を追加
-            print("スクレイピングが完了しました。")
-            print(f"以下のコンテンツを取得しました。{tasks}")
-            return await asyncio.gather(*tasks)
+                    delay + random.uniform(0, 1)
+                )  # ランダムな遅延を追加scrape_with_rate_limit
+                print(task)
+            try:
+                results = await asyncio.wait_for(asyncio.gather(*tasks), timeout=timeout)
+                print("スクレイピングが完了しました。")
+                return results
+            except asyncio.TimeoutError:
+                print(f"スクレイピングが{timeout}秒でタイムアウトしました。")
+                return [task.result() if task.done() else None for task in tasks]
 
     async def fetch_with_retry(self, session, url, max_retries):
-        print("fetch_with_retry")
         for attempt in range(max_retries):
             try:
                 return await self.fetch_article_content(session, url)
