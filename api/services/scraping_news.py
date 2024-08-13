@@ -11,6 +11,7 @@ class ScrapingNews:
         }
 
     async def fetch_article_content(self, session, url):
+        print("スクレイピングを試みます。")
         try:
             async with session.get(url, headers=self.headers, timeout=30) as response:
                 html = await response.text()
@@ -62,7 +63,7 @@ class ScrapingNews:
                     delay + random.uniform(0, 3)
                 )  # ランダムな遅延を追加
             print("スクレイピングが完了しました。")
-            print(f"以下のコンテンツを取得しました。{task}")
+            # print(f"以下のコンテンツを取得しました。{task}")
             return await asyncio.gather(*tasks)
 
     async def fetch_with_retry(self, session, url, max_retries):
