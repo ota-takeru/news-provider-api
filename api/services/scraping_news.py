@@ -56,7 +56,6 @@ class ScrapingNews:
         async with aiohttp.ClientSession() as session:
             print(" urlを取得してスクレイピングを開始します")
             tasks = []
-            print("url: ", urls)
             for url in urls:
                 task = asyncio.create_task(self.fetch_with_retry(session, url, max_retries))
                 tasks.append(task)

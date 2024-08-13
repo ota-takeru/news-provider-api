@@ -23,12 +23,14 @@ class handler(BaseHTTPRequestHandler):
             self.database.close()
 
     async def update_news(self):
-        time_22_hours_ago = datetime.now() - timedelta(hours=22)
+        time_22_hours_ago = datetime.now() - timedelta(hours=220)    
+        # hours時間までを取得
         news_data = self.database.get_daily_news("news", time_22_hours_ago)
 
         print("データを取得しました")
         
         urls = [news["url"] for news in news_data]
+        print("url: ", urls)
         
         contents = await self.scraping_news.scrape_with_rate_limit(urls)
     
