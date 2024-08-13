@@ -53,6 +53,7 @@ class ScrapingNews:
 
     async def scrape_with_rate_limit(self, urls, delay=1, max_retries=3):
         async with aiohttp.ClientSession() as session:
+            print(" urlを取得してスクレイピングを開始します")
             tasks = []
             for url in urls:
                 task = self.fetch_with_retry(session, url, max_retries)
@@ -60,6 +61,8 @@ class ScrapingNews:
                 await asyncio.sleep(
                     delay + random.uniform(0, 3)
                 )  # ランダムな遅延を追加
+            print("スクレイピングが完了しました。")
+            print(f"以下のコンテンツを取得しました。{task}")
             return await asyncio.gather(*tasks)
 
     async def fetch_with_retry(self, session, url, max_retries):

@@ -125,6 +125,7 @@ class PostgresDatabase:
         :param content: 更新するコンテンツ
         """
         try:
+            print("データを保存します。")
             update_query = sql.SQL("UPDATE {table} SET content = %s WHERE id = %s").format(
                 table=sql.Identifier("news")
             )
