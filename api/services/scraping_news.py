@@ -63,10 +63,11 @@ class ScrapingNews:
                     delay + random.uniform(0, 3)
                 )  # ランダムな遅延を追加
             print("スクレイピングが完了しました。")
-            # print(f"以下のコンテンツを取得しました。{task}")
+            print(f"以下のコンテンツを取得しました。{tasks}")
             return await asyncio.gather(*tasks)
 
     async def fetch_with_retry(self, session, url, max_retries):
+        print("fetch_with_retry")
         for attempt in range(max_retries):
             try:
                 return await self.fetch_article_content(session, url)
