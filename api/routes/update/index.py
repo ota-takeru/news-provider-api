@@ -31,12 +31,13 @@ class handler(BaseHTTPRequestHandler):
         apikey = "a62af10295cc94b1a68c9b6b936e94a7"
         url = f"https://gnews.io/api/v4/search?q=example&lang=ja&country=ja&max=10&from={formatted_time}&expand=content&apikey={apikey}"
 
-        with urllib3.request.urlopen(url) as response:
-            data = json.loads(response.read().decode("utf-8"))
-            articles = data["articles"]
+        http = urllib3.PoolManager()
+        response = http.request('GET', url)
+        data = json.loads(response.data.decode('utf-8'))
+        articles = data["articles"]
             
-            for article in range(len(articles)):
-                self.database.insert_data("news", article)
+        for article in range(len(articles)):
+            self.database.insert_data("news", article)
             
         # loop = asyncio.new_event_loop()
         # asyncio.set_event_loop(loop)
