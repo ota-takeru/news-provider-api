@@ -23,7 +23,7 @@ class handler(BaseHTTPRequestHandler):
     def __del__(self):
         if hasattr(self, 'database'):
             self.database.close()
-
+      
 
     def do_POST(self):
         time_22_hours_ago = datetime.utcnow()- timedelta(hours=22)
