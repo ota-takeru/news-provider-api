@@ -35,14 +35,13 @@ class handler(BaseHTTPRequestHandler):
         response = http.request('GET', url)
         data = json.loads(response.data.decode('utf-8'))
         articles = data["articles"]
-
         print(len(articles))
             
-        for article in articles:
+        for i in range(len(articles)):
             article_data = {
-                "title": article.get("title", ""),
-                "url": article.get("url", ""),
-                "content": article.get("content", "")
+                "title": articles[i]["title"],
+                "url": articles[i]["url"],
+                "content": articles[i]["content"]
             }
             self.database.insert_data("news", article_data)
         # loop = asyncio.new_event_loop()

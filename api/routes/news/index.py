@@ -36,7 +36,7 @@ class handler(BaseHTTPRequestHandler):
             serializable_item = {
                 "id": item[0],
                 "title": item[1],
-                "content": item[2],
+                "content": item[5],
                 # "published_date": item[3].isoformat(),
                 # 他のフィールドがある場合は追加
             }
