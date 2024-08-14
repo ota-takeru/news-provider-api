@@ -31,19 +31,20 @@ class handler(BaseHTTPRequestHandler):
             print(f"ニュースデータの取得中にエラーが発生しました: {e}")
 
          # datetimeオブジェクトを文字列に変換
-        serializable_news_data = []
-        for item in news_data:
-            print(item)
-            serializable_item = {
-                "id": item[0],
-                "title": item[1],
-                "content": item[5],
-                # "published_date": item[3].isoformat(),
-                # 他のフィールドがある場合は追加
-            }
-            serializable_news_data.append(serializable_item)
+        # serializable_news_data = []
+        # for item in news_data:
+        #     print(item)
+        #     serializable_item = {
+        #         "id": item[0],
+        #         "title": item[1],
+        #         "content": item[5],
+        #         # "published_date": item[3].isoformat(),
+        #         # 他のフィールドがある場合は追加
+        #     }
+        #     serializable_news_data.append(serializable_item)
 
-        response = json.dumps(serializable_news_data, ensure_ascii=False)
+        response = json.dumps(news_data, ensure_ascii=False)
+        # response = json.dumps(serializable_news_data, ensure_ascii=False)
 
         # ヘッダーの設定
         self.send_response(200)
