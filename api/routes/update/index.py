@@ -35,6 +35,8 @@ class handler(BaseHTTPRequestHandler):
         response = http.request('GET', url)
         data = json.loads(response.data.decode('utf-8'))
         articles = data["articles"]
+
+        print(len(articles))
             
         for article in range(len(articles)):
             self.database.insert_data("news", article)
