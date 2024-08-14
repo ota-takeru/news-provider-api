@@ -36,7 +36,7 @@ class handler(BaseHTTPRequestHandler):
         data = json.loads(response.data.decode('utf-8'))
         articles = data["articles"]
         print(len(articles))
-        print(f"Type of article_data: {type(article_data)}")
+        print(f"Type of article_data: {type(articles)}")
             
         for i in range(len(articles)):
             article_data = {
