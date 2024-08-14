@@ -33,6 +33,7 @@ class handler(BaseHTTPRequestHandler):
          # datetimeオブジェクトを文字列に変換
         serializable_news_data = []
         for item in news_data:
+            print(item)
             serializable_item = {
                 "id": item[0],
                 "title": item[1],
