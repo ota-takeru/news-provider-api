@@ -38,9 +38,13 @@ class handler(BaseHTTPRequestHandler):
 
         print(len(articles))
             
-        for article in range(len(articles)):
-            self.database.insert_data("news", article)
-            
+        for article in articles:
+            article_data = {
+                "title": article.get("title", ""),
+                "url": article.get("url", ""),
+                "content": article.get("content", "")
+            }
+            self.database.insert_data("news", article_data)
         # loop = asyncio.new_event_loop()
         # asyncio.set_event_loop(loop)
         # try:
