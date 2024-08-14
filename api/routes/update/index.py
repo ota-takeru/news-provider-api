@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler
 import json
 import os
+
+import urllib3
 from api.services.get_news_bing import GetNewsBing
 from api.models.postgres_database import PostgresDatabase
 from api.services.scraping_news import ScrapingNews
@@ -22,36 +24,26 @@ class handler(BaseHTTPRequestHandler):
         if hasattr(self, 'database'):
             self.database.close()
 
-    async def update_news(self):
-        time_22_hours_ago = datetime.now() - timedelta(hours=220)    
-        # hours時間までを取得
-        news_data = self.database.get_daily_news("news", time_22_hours_ago)
-
-        print("データを取得しました")
-        
-        urls = [news["url"] for news in news_data]
-        print("url: ", urls)
-        
-        contents = await self.scraping_news.scrape_with_rate_limit(urls)
-    
-        for news, content in zip(news_data, contents):
-            self.database.update_news_content(news["id"], content)
-
-        print(f"{len(contents)}件のニュース記事が更新されました。")
 
     def do_POST(self):
-        # news_api = self.getNewsBing.get_customized_top_news(count=5)
-        # for news in news_api:
-        #     title = news["name"]
-        #     url = news["url"]
-        #     self.database.insert_data("news", {"title": title, "url": url})
+        time_22_hours_ago = datetime.datetime.utcnow()- timedelta(hours=22)
+        formatted_time = time_22_hours_ago.strftime("%Y-%m-%dT%H:%M:%SZ")
+        apikey = "a62af10295cc94b1a68c9b6b936e94a7"
+        url = f"https://gnews.io/api/v4/search?q=example&lang=ja&country=ja&max=10&from={formatted_time}&expand=content&apikey={apikey}"
+
+        with urllib3.request.urlopen(url) as response:
+            data = json.loads(response.read().decode("utf-8"))
+            articles = data["articles"]
             
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            loop.run_until_complete(self.update_news())
-        finally:
-            loop.close()  
+            for article in range(len(articles)):
+                self.database.insert_data("news", article)
+            
+        # loop = asyncio.new_event_loop()
+        # asyncio.set_event_loop(loop)
+        # try:
+        #     loop.run_until_complete(self.update_news())
+        # finally:
+        #     loop.close()  
 
         response = {"message": "News data saved successfully."}
         response_json = json.dumps(response)

@@ -23,6 +23,7 @@ class ScrapingNews:
                     soup.find("main")
                     or soup.find("article")
                     or soup.find("div", class_="content")
+                    or soup.find("body", class_="article-body")
                 )
 
                 if main_content:
@@ -61,7 +62,7 @@ class ScrapingNews:
                 tasks.append(task)
                 await asyncio.sleep(
                     delay + random.uniform(0, 1)
-                )  # ランダムな遅延を追加scrape_with_rate_limit
+                )  # ランダムな遅延を追加
                 print(task)
             try:
                 results = await asyncio.wait_for(asyncio.gather(*tasks), timeout=timeout)
