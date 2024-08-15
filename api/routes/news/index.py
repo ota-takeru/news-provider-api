@@ -24,8 +24,8 @@ class handler(BaseHTTPRequestHandler):
             if not news_data:
                 news_data = []
                 print("ニュースデータが見つかりませんでした。")
-            all_data = self.database.fetch_all("news")
-            print("all_data", all_data) 
+            # all_data = self.database.fetch_all("news")
+            # print("all_data", all_data) 
         except Exception as e:
             news_data = []
             print(f"ニュースデータの取得中にエラーが発生しました: {e}")
@@ -34,9 +34,8 @@ class handler(BaseHTTPRequestHandler):
         #  datetimeオブジェクトを文字列に変換
         serializable_news_data = []
         for item in news_data:
-            print(item)
             serializable_item = {
-                "id": item["id"],  # 辞書のキーでアクセス
+                "id": item["id"], 
                 "title": item["title"],
                 "content": item["content"],
                 # "published_date": item["published_date"].isoformat(),
@@ -44,8 +43,8 @@ class handler(BaseHTTPRequestHandler):
             }
             serializable_news_data.append(serializable_item)
 
-        response = json.dumps(news_data, ensure_ascii=False)
-        # response = json.dumps(serializable_news_data, ensure_ascii=False)
+        # response = json.dumps(news_data, ensure_ascii=False)
+        response = json.dumps(serializable_news_data, ensure_ascii=False)
 
         # ヘッダーの設定
         self.send_response(200)
