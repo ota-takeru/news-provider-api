@@ -24,13 +24,13 @@ class handler(BaseHTTPRequestHandler):
             if not news_data:
                 news_data = []
                 print("ニュースデータが見つかりませんでした。")
-            # all_data = self.database.fetch_all("news")
-            # print("all_data", all_data)
+            all_data = self.database.fetch_all("news")
+            print("all_data", all_data)
         except Exception as e:
             news_data = []
             print(f"ニュースデータの取得中にエラーが発生しました: {e}")
 
-        print(news_data[0][0])
+        print(news_data)
         #  datetimeオブジェクトを文字列に変換
         serializable_news_data = []
         for item in news_data:
