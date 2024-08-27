@@ -4,6 +4,24 @@ import json
 from datetime import datetime, timedelta
 from api.models.postgres_database import PostgresDatabase
 
+def set_cors_headers(handler, request_origin):
+    allowed_origins = [
+        'http://localhost:3000',  # 開発環境
+        'https://your-flutter-app.com',  # 本番環境のWebアプリ
+        None  # モバイル/デスクトップアプリからのリクエスト用
+    ]
+    
+    if request_origin in allowed_origins or request_origin is None:
+        if request_origin:
+            handler.send_header('Access-Control-Allow-Origin', request_origin)
+        else:
+            handler.send_header('Access-Control-Allow-Origin', '*')  # モバイル/デスクトップアプリ用
+    else:
+        handler.send_header('Access-Control-Allow-Origin', 'https://your-flutter-app.com')  # デフォルトのオリジン
+    
+    handler.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    handler.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
 
 class handler(BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -49,6 +67,7 @@ class handler(BaseHTTPRequestHandler):
         # ヘッダーの設定
         self.send_response(200)
         self.send_header("Content-type", "application/json; charset=utf-8")
+        set_cors_headers(self) 
         self.end_headers()
 
         # レスポンスの送信

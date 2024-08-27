@@ -17,7 +17,7 @@ class handler(BaseHTTPRequestHandler):
         database_url = os.environ.get('POSTGRES_URL')
         self.database = PostgresDatabase(database_url)
         self.database.connect()
-        self.database.create_table("news", "id SERIAL PRIMARY KEY, title TEXT, url TEXT")
+        self.database.create_table("news", "id SERIAL PRIMARY KEY, title TEXT, url TEXT")   
         super().__init__(*args, **kwargs)
 
     def __del__(self):
@@ -26,10 +26,10 @@ class handler(BaseHTTPRequestHandler):
       
 
     def do_POST(self):
-        time_22_hours_ago = datetime.utcnow()- timedelta(hours=22)
+        time_22_hours_ago = datetime.now(datetime.timezone.utc) - timedelta(hours=22)
         formatted_time = time_22_hours_ago.strftime("%Y-%m-%dT%H:%M:%SZ")
         apikey = "a62af10295cc94b1a68c9b6b936e94a7"
-        url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=ja&max=10&from={formatted_time}&expand=content&apikey={apikey}"
+        url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=ja&max=20&from={formatted_time}&expand=content&apikey={apikey}"
 
         http = urllib3.PoolManager()
         response = http.request('GET', url)
