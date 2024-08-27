@@ -6,7 +6,7 @@ from api.models.postgres_database import PostgresDatabase
 
 def set_cors_headers(handler, request_origin):
     allowed_origins = [
-        'http://localhost',  # 開発環境
+        'http://127.0.0.1:8080',   # 開発環境
         'https://your-flutter-app.com',  # 本番環境のWebアプリ
         None  # モバイル/デスクトップアプリからのリクエスト用
     ]
