@@ -22,6 +22,12 @@ def set_cors_headers(handler, request_origin):
     handler.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
     handler.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
+def do_OPTIONS(self):
+    self.send_response(200)
+    request_origin = self.headers.get('Origin')
+    set_cors_headers(self, request_origin)
+    self.end_headers()
+
 
 class handler(BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -67,7 +73,8 @@ class handler(BaseHTTPRequestHandler):
         # ヘッダーの設定
         self.send_response(200)
         self.send_header("Content-type", "application/json; charset=utf-8")
-        set_cors_headers(self) 
+        request_origin = self.headers.get('Origin')
+        set_cors_headers(self, request_origin)
         self.end_headers()
 
         # レスポンスの送信
