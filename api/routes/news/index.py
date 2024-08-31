@@ -62,6 +62,9 @@ class handler(BaseHTTPRequestHandler):
                 "id": item["id"], 
                 "title": item["title"],
                 "content": item["content"],
+                "url": item["url"],
+                "source_name": item["source_name"],
+                "source_url": item["source_url"],
                 # "published_date": item["published_date"].isoformat(),
                 # 他のフィールドがある場合は追加
             }

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler
 import json
 import os
@@ -30,7 +30,7 @@ class handler(BaseHTTPRequestHandler):
             self.database.close()
 
     def do_POST(self):
-        time_22_hours_ago = datetime.now(datetime.timezone.utc) - timedelta(hours=22)
+        time_22_hours_ago = datetime.now(timezone.utc) - timedelta(hours=22)
         formatted_time = time_22_hours_ago.strftime("%Y-%m-%dT%H:%M:%SZ")
         apikey = "a62af10295cc94b1a68c9b6b936e94a7"
         url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=ja&max=20&from={formatted_time}&expand=content&apikey={apikey}"
