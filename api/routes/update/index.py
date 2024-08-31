@@ -15,8 +15,8 @@ from concurrent.futures import ThreadPoolExecutor
 
 class handler(BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        self.getNewsBing = GetNewsBing()
-        self.scraping_news = ScrapingNews()
+        # self.getNewsBing = GetNewsBing()
+        # self.scraping_news = ScrapingNews()
         database_url = os.environ.get("POSTGRES_URL")
         self.database = PostgresDatabase(database_url)
         self.database.connect()
