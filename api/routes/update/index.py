@@ -31,6 +31,13 @@ class handler(BaseHTTPRequestHandler):
             url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=jp&max=1&expand=content&apikey={apikey}"
             # url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=jp&max=1&from={formatted_time}&expand=content&apikey={apikey}"
 
+            apikey = os.environ.get("GNEWS_API_KEY")
+            if not apikey:
+                raise ValueError("GNEWS_API_KEY not found in environment variables")
+            # url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=jp&max=1&expand=content&apikey={apikey}"
+            url = f"https://gnews.io/api/v4/top-headlines?lang=ja&country=jp&max=1&from={formatted_time}&expand=content&apikey={apikey}"
+
+
             http = urllib3.PoolManager()
             response = http.request("GET", url, timeout=10.0)
             data = json.loads(response.data.decode("utf-8"))
