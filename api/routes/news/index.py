@@ -3,7 +3,6 @@ import os
 import json
 from datetime import datetime, timedelta
 from api.models.postgres_database import PostgresDatabase
-
 def set_cors_headers(handler, request_origin):
     allowed_origins = [
         'http://127.0.0.1:8080',   # 開発環境
@@ -65,12 +64,12 @@ class handler(BaseHTTPRequestHandler):
                 "url": item["url"],
                 "source_name": item["source_name"],
                 "source_url": item["source_url"],
+                "published_at": item["published_at"].isoformat(),
                 # "published_date": item["published_date"].isoformat(),
                 # 他のフィールドがある場合は追加
             }
             serializable_news_data.append(serializable_item)
 
-        # response = json.dumps(news_data, ensure_ascii=False)
         response = json.dumps(serializable_news_data, ensure_ascii=False)
 
         # ヘッダーの設定

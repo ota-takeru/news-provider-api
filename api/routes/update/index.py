@@ -28,12 +28,6 @@ class handler(BaseHTTPRequestHandler):
             apikey = os.environ.get("GNEWS_API_KEY")
             if not apikey:
                 raise ValueError("GNEWS_API_KEY not found in environment variables")
-            url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=jp&max=20&expand=content&apikey={apikey}"
-            # url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=jp&max=1&from={formatted_time}&expand=content&apikey={apikey}"
-
-            apikey = os.environ.get("GNEWS_API_KEY")
-            if not apikey:
-                raise ValueError("GNEWS_API_KEY not found in environment variables")
             # url = f"https://gnews.io/api/v4/top-headlines?lang=ja&country=jp&max=1&expand=content&apikey={apikey}"
             url = f"https://gnews.io/api/v4/top-headlines?lang=ja&country=jp&max=20&from={formatted_time}&expand=content&apikey={apikey}"
 
@@ -56,6 +50,7 @@ class handler(BaseHTTPRequestHandler):
                     "content": article.get("content", ""),
                     "source_name": article.get("source", {}).get("name", ""),
                     "source_url": article.get("source", {}).get("url", ""),
+                    "published_at": article.get("publishedAt", ""),
                 }
                 self.database.insert_data("news", article_data)
 
