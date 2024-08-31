@@ -11,9 +11,6 @@ class handler(BaseHTTPRequestHandler):
             database_url = os.environ.get("POSTGRES_URL")
             self.database = PostgresDatabase(database_url)
             self.database.connect()
-            self.database.create_table(
-                "news", "id SERIAL PRIMARY KEY, title TEXT, url TEXT, content TEXT, source_name TEXT, source_url TEXT"
-            )
             super().__init__(*args, **kwargs)
         except Exception as e:
             print(f"Error during initialization: {str(e)}")
@@ -41,6 +38,8 @@ class handler(BaseHTTPRequestHandler):
                 raise KeyError("'articles' key not found in API response")
             
             articles = data["articles"]
+            print(f"Received {len(articles)} articles from GNews API")
+            print(articles[0])
 
             for article in articles:
                 article_data = {
