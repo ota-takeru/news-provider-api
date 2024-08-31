@@ -60,12 +60,11 @@ class handler(BaseHTTPRequestHandler):
             serializable_item = {
                 "id": item["id"], 
                 "title": item["title"],
-                "content": item["content"],
+                "published_at": item["published_at"],
                 "url": item["url"],
                 "source_name": item["source_name"],
                 "source_url": item["source_url"],
-                "published_at": item["published_at"].isoformat(),
-                # "published_date": item["published_date"].isoformat(),
+                "content": item["content"],
                 # 他のフィールドがある場合は追加
             }
             serializable_news_data.append(serializable_item)
