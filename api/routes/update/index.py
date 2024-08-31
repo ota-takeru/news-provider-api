@@ -27,14 +27,13 @@ class handler(BaseHTTPRequestHandler):
             apikey = os.environ.get("GNEWS_API_KEY")
             if not apikey:
                 raise ValueError("GNEWS_API_KEY not found in environment variables")
-            print(apikey)
-            url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=ja&max=1&from={formatted_time}&expand=content&apikey={apikey}"
+            url = f"https://gnews.io/api/v4/top-headlines?&lang=ja&country=jp&max=1&from={formatted_time}&expand=content&apikey={apikey}"
 
             http = urllib3.PoolManager()
             response = http.request("GET", url, timeout=10.0)
             data = json.loads(response.data.decode("utf-8"))
 
-            print(data)
+            print(data['totalArticles'])
             
             if "articles" not in data:
                 raise KeyError("'articles' key not found in API response")
