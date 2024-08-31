@@ -47,6 +47,8 @@ class handler(BaseHTTPRequestHandler):
                 "title": articles[i]["title"],
                 "url": articles[i]["url"],
                 "content": articles[i]["content"],
+                "source_name": articles[i]["source"]["name"],
+                "source_url": articles[i]["source"]["url"],
             }
             self.database.insert_data("news", article_data)
         # loop = asyncio.new_event_loop()
