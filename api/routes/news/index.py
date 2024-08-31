@@ -60,7 +60,7 @@ class handler(BaseHTTPRequestHandler):
             serializable_item = {
                 "id": item["id"], 
                 "title": item["title"],
-                "published_at": item["published_at"],
+                "published_at": item["published_at"].isoformat(),
                 "url": item["url"],
                 "source_name": item["source_name"],
                 "source_url": item["source_url"],
