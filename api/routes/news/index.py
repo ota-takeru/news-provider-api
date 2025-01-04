@@ -65,7 +65,6 @@ class handler(BaseHTTPRequestHandler):
                 "source_name": item["source_name"],
                 "source_url": item["source_url"],
                 "content": item["content"],
-                # 他のフィールドがある場合は追加
             }
             serializable_news_data.append(serializable_item)
 
