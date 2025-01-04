@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler
 import json
 from datetime import datetime
-from gnews import GNews
+from gnews import GNews  # type: ignore
 
 def set_cors_headers(handler, request_origin):
     allowed_origins = [
@@ -30,7 +30,7 @@ def do_OPTIONS(self):
 
 class handler(BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        self.gnews = GNews(language='en', country='US')  # GNewsの初期化
+        self.gnews = GNews(language='ja', country='JP')  # GNewsの初期化
         super().__init__(*args, **kwargs)
 
     def do_GET(self):
