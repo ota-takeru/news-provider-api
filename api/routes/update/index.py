@@ -1,65 +1,73 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler
 import json
 import os
-from api.services.get_news_bing import GetNewsBing
+import urllib3
 from api.models.postgres_database import PostgresDatabase
-from api.services.scraping_news import ScrapingNews
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
 
-class handler(BaseHTTPRequestHandler):  
+class handler(BaseHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        self.getNewsBing = GetNewsBing()
-        self.scraping_news = ScrapingNews()
-        database_url = os.environ.get('POSTGRES_URL')
-        self.database = PostgresDatabase(database_url)
-        self.database.connect()
-        self.database.create_table("news", "id SERIAL PRIMARY KEY, title TEXT, url TEXT")
-        super().__init__(*args, **kwargs)
+        try:
+            database_url = os.environ.get("POSTGRES_URL")
+            self.database = PostgresDatabase(database_url)
+            self.database.connect()
+            super().__init__(*args, **kwargs)
+        except Exception as e:
+            print(f"Error during initialization: {str(e)}")
+            raise
 
     def __del__(self):
-        if hasattr(self, 'database'):
+        if hasattr(self, "database"):
             self.database.close()
 
-    async def update_news(self):
-        time_22_hours_ago = datetime.now() - timedelta(hours=220)    
-        # hours時間までを取得
-        news_data = self.database.get_daily_news("news", time_22_hours_ago)
-
-        print("データを取得しました")
-        
-        urls = [news["url"] for news in news_data]
-        print("url: ", urls)
-        
-        contents = await self.scraping_news.scrape_with_rate_limit(urls)
-    
-        for news, content in zip(news_data, contents):
-            self.database.update_news_content(news["id"], content)
-
-        print(f"{len(contents)}件のニュース記事が更新されました。")
-
     def do_POST(self):
-        # news_api = self.getNewsBing.get_customized_top_news(count=5)
-        # for news in news_api:
-        #     title = news["name"]
-        #     url = news["url"]
-        #     self.database.insert_data("news", {"title": title, "url": url})
-            
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
         try:
-            loop.run_until_complete(self.update_news())
-        finally:
-            loop.close()  
+            time_24_hours_ago = datetime.now(timezone.utc) - timedelta(hours=24)
+            formatted_time = time_24_hours_ago.strftime("%Y-%m-%dT%H:%M:%SZ")+ "Z"
 
-        response = {"message": "News data saved successfully."}
-        response_json = json.dumps(response)
+            apikey = os.environ.get("GNEWS_API_KEY")
+            if not apikey:
+                raise ValueError("GNEWS_API_KEY not found in environment variables")
+            # url = f"https://gnews.io/api/v4/top-headlines?lang=ja&country=jp&max=1&expand=content&apikey={apikey}"
+            url = f"https://gnews.io/api/v4/top-headlines?lang=ja&country=jp&max=20&from={formatted_time}&expand=content&apikey={apikey}"
 
-        # ヘッダーの設定
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
 
-        # レスポンスの送信
-        self.wfile.write(response_json.encode('utf-8'))
+            http = urllib3.PoolManager()
+            response = http.request("GET", url, timeout=10.0)
+            data = json.loads(response.data.decode("utf-8"))
+            
+            if "articles" not in data:
+                raise KeyError("'articles' key not found in API response")
+            
+            articles = data["articles"]
+            print(f"Received {len(articles)} articles from GNews API")
+            print(articles[0])
+
+            for article in articles:
+                article_data = {
+                    "title": article.get("title", ""),
+                    "url": article.get("url", ""),
+                    "content": article.get("content", ""),
+                    "source_name": article.get("source", {}).get("name", ""),
+                    "source_url": article.get("source", {}).get("url", ""),
+                    "published_at": article.get("publishedAt", ""),
+                }
+                self.database.insert_data("news", article_data)
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"message": "News data saved successfully."}).encode("utf-8"))
+        
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON: {str(e)}")
+            self.send_error(500, "Internal Server Error")
+        except KeyError as e:
+            print(f"Key error: {str(e)}")
+            self.send_error(500, "Internal Server Error")
+        except urllib3.exceptions.RequestError as e:
+            print(f"Error during HTTP request: {str(e)}")
+            self.send_error(500, "Internal Server Error")
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")
+            self.send_error(500, "Internal Server Error")
